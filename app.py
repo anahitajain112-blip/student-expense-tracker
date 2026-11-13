@@ -43,10 +43,14 @@ CATEGORY_EMOJI = {
 st.markdown("""
 <style>
 
-/* MAIN WEBSITE */
+/* MAIN BACKGROUND AND DEFAULT TEXT */
 .stApp {
-    background-color: #ECECE2;
-    color: #263D30;
+    background-color: #ECECE2 !important;
+    color: #263D30 !important;
+}
+
+[data-testid="stAppViewContainer"] {
+    background-color: #ECECE2 !important;
 }
 
 .main .block-container {
@@ -54,58 +58,72 @@ st.markdown("""
     padding-bottom: 3rem;
 }
 
-/* MAIN TITLE */
+/* MAIN HEADINGS */
 .main-title {
     font-size: 2.4rem;
     font-weight: 800;
-    color: #263D30;
+    color: #263D30 !important;
     margin-bottom: 0.2rem;
 }
 
 .subtitle {
     font-size: 1.05rem;
-    color: #526454;
+    color: #526454 !important;
     margin-bottom: 1.5rem;
 }
 
-/* SECTION HEADINGS */
 .section-title {
     font-size: 1.35rem;
     font-weight: 750;
-    color: #263D30;
+    color: #263D30 !important;
     margin-top: 1.5rem;
     margin-bottom: 0.7rem;
 }
 
-/* SIDEBAR */
-section[data-testid="stSidebar"] {
-    background-color: #D6E0D2;
+/* ALL NORMAL PAGE TEXT */
+.stApp p,
+.stApp li,
+.stApp span,
+.stApp label,
+.stApp [data-testid="stMarkdownContainer"] {
+    color: #34483B;
 }
 
-section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
-section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h1,
-section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h2,
-section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h3,
-section[data-testid="stSidebar"] label {
+/* SIDEBAR */
+section[data-testid="stSidebar"] {
+    background-color: #D6E0D2 !important;
+}
+
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] li,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {
     color: #263D30 !important;
 }
 
 section[data-testid="stSidebar"] hr {
-    border-color: #AABBA7;
+    border-color: #AABBA7 !important;
 }
 
-/* ALL INPUT LABELS */
+/* WIDGET LABELS */
 [data-testid="stWidgetLabel"],
 [data-testid="stWidgetLabel"] p,
+[data-testid="stWidgetLabel"] label,
 .stTextInput label,
 .stNumberInput label,
 .stSelectbox label,
-.stDateInput label {
+.stDateInput label,
+.stTextArea label {
     color: #263D30 !important;
+    -webkit-text-fill-color: #263D30 !important;
     font-weight: 700 !important;
 }
 
-/* INPUT BOXES */
+/* TEXT INPUTS AND NUMBER INPUTS */
 div[data-baseweb="input"],
 div[data-baseweb="base-input"] {
     background-color: #FFFFFF !important;
@@ -114,11 +132,14 @@ div[data-baseweb="base-input"] {
 }
 
 input,
-textarea {
+textarea,
+div[data-baseweb="input"] input,
+div[data-baseweb="base-input"] input {
     color: #263D30 !important;
     -webkit-text-fill-color: #263D30 !important;
     background-color: #FFFFFF !important;
     font-weight: 600 !important;
+    caret-color: #263D30 !important;
 }
 
 input::placeholder,
@@ -127,31 +148,41 @@ textarea::placeholder {
     -webkit-text-fill-color: #7A897B !important;
 }
 
-/* NUMBER INPUTS */
+/* NUMBER INPUT +/- BUTTONS */
 .stNumberInput button {
     background-color: #DCE5D8 !important;
     color: #263D30 !important;
     border-color: #B7C7B3 !important;
 }
 
-/* DROPDOWNS */
+.stNumberInput button svg {
+    fill: #263D30 !important;
+    color: #263D30 !important;
+}
+
+/* DROPDOWN SELECTED VALUE */
 div[data-baseweb="select"] > div {
     background-color: #FFFFFF !important;
     border-color: #B7C7B3 !important;
 }
 
+div[data-baseweb="select"] *,
 div[data-baseweb="select"] span {
     color: #263D30 !important;
+    -webkit-text-fill-color: #263D30 !important;
 }
 
+/* DROPDOWN OPTIONS */
 div[role="listbox"],
 div[role="option"] {
     background-color: #FFFFFF !important;
     color: #263D30 !important;
 }
 
-div[role="option"] * {
+div[role="option"] *,
+div[role="listbox"] * {
     color: #263D30 !important;
+    -webkit-text-fill-color: #263D30 !important;
 }
 
 /* DATE PICKER */
@@ -159,14 +190,24 @@ div[data-baseweb="datepicker"] {
     background-color: #FFFFFF !important;
 }
 
+div[data-baseweb="datepicker"] input {
+    color: #263D30 !important;
+    -webkit-text-fill-color: #263D30 !important;
+}
+
 div[data-baseweb="calendar"] {
     background-color: #FFFFFF !important;
     color: #263D30 !important;
 }
 
+div[data-baseweb="calendar"] button,
+div[data-baseweb="calendar"] button * {
+    color: #263D30 !important;
+}
+
 /* FORM */
 [data-testid="stForm"] {
-    background-color: #E0E5D9;
+    background-color: #E0E5D9 !important;
     padding: 22px;
     border-radius: 18px;
     border: 1px solid #C7D2C3;
@@ -184,14 +225,14 @@ div[data-baseweb="calendar"] {
 
 .metric-label {
     font-size: 0.9rem;
-    color: #526454;
+    color: #526454 !important;
     margin-bottom: 0.4rem;
 }
 
 .metric-value {
     font-size: 1.5rem;
     font-weight: 750;
-    color: #355C43;
+    color: #355C43 !important;
 }
 
 /* EXPENSE HISTORY */
@@ -201,12 +242,16 @@ div[data-baseweb="calendar"] {
     border-radius: 16px;
     border: 1px solid #D5DDD0;
     box-shadow: 0 3px 10px rgba(38, 61, 48, 0.07);
-    color: #263D30;
+    color: #263D30 !important;
     margin-bottom: 0.7rem;
 }
 
+.history-card b {
+    color: #263D30 !important;
+}
+
 .history-note {
-    color: #526454;
+    color: #526454 !important;
     font-size: 0.85rem;
 }
 
@@ -215,10 +260,17 @@ div[data-baseweb="calendar"] {
 .stFormSubmitButton > button {
     background-color: #426B4F !important;
     color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
     border-radius: 12px;
     border: none;
     padding: 0.6rem 1.2rem;
     font-weight: 650;
+}
+
+.stButton > button *,
+.stFormSubmitButton > button * {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
 }
 
 .stButton > button:hover,
@@ -229,12 +281,12 @@ div[data-baseweb="calendar"] {
 
 /* PROGRESS BAR */
 .stProgress > div > div > div > div {
-    background-color: #527C5C;
+    background-color: #527C5C !important;
 }
 
 /* CHART CONTAINER */
 [data-testid="stPlotlyChart"] {
-    background-color: #FFFFFF;
+    background-color: #FFFFFF !important;
     border-radius: 16px;
     padding: 12px;
     border: 1px solid #D5DDD0;
@@ -242,12 +294,12 @@ div[data-baseweb="calendar"] {
 
 /* EXPANDER */
 [data-testid="stExpander"] {
-    border-color: #C7D2C3;
+    border-color: #C7D2C3 !important;
 }
 
-[data-testid="stExpander"] summary {
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] summary * {
     color: #263D30 !important;
-    font-weight: 650;
 }
 
 /* DATAFRAME */
@@ -256,14 +308,21 @@ div[data-baseweb="calendar"] {
     border-radius: 12px;
 }
 
-/* CAPTIONS */
-[data-testid="stCaptionContainer"] {
+/* CAPTIONS AND HELP TEXT */
+[data-testid="stCaptionContainer"],
+[data-testid="stCaptionContainer"] * {
     color: #526454 !important;
 }
 
-/* GENERAL TEXT */
-.stApp p {
-    color: #34483B;
+/* ALERTS */
+[data-testid="stAlert"] p,
+[data-testid="stAlert"] span {
+    color: inherit;
+}
+
+/* DIVIDERS */
+hr {
+    border-color: #C7D2C3 !important;
 }
 
 </style>
