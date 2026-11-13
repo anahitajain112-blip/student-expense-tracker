@@ -694,14 +694,15 @@ if not expenses.empty:
             "Select expense number to delete",
             expenses.index.tolist()
         )
-
-        if st.button("Delete Selected Expense"):
+        
+if st.button("Delete Selected Expense"):
 
     delete_expense(user_expense_file, selected_index)
 
     st.success("Expense deleted successfully.")
 
     st.rerun()
+
 else:
 
     st.info(
