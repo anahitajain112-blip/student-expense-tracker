@@ -6,7 +6,7 @@ import os
 
 st.set_page_config(
     page_title="Student Expense Tracker",
-    page_icon="💰",
+    page_icon="💸",
     layout="wide"
 )
 
@@ -21,13 +21,97 @@ CATEGORIES = [
     "Miscellaneous"
 ]
 
+CATEGORY_EMOJI = {
+    "Food": "🍜",
+    "Transport": "🚌",
+    "Academic": "📚",
+    "Shopping": "🛍️",
+    "Entertainment": "🎬",
+    "Miscellaneous": "✨"
+}
+
+# Custom styling
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #F7F5FF;
+        color: #2E2A3B;
+    }
+
+    .main-title {
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: #4B3F72;
+        margin-bottom: 0.2rem;
+    }
+
+    .subtitle {
+        font-size: 1.05rem;
+        color: #6B6480;
+        margin-bottom: 1.5rem;
+    }
+
+    .metric-card {
+        background-color: #FFFFFF;
+        padding: 1.2rem;
+        border-radius: 18px;
+        box-shadow: 0 4px 14px rgba(124, 111, 240, 0.12);
+        text-align: center;
+    }
+
+    .metric-label {
+        font-size: 0.9rem;
+        color: #6B6480;
+        margin-bottom: 0.3rem;
+    }
+
+    .metric-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #4B3F72;
+    }
+
+    .section-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #4B3F72;
+        margin-top: 1.5rem;
+        margin-bottom: 0.7rem;
+    }
+
+    .history-card {
+        background-color: #FFFFFF;
+        padding: 1rem;
+        border-radius: 16px;
+        box-shadow: 0 3px 10px rgba(124, 111, 240, 0.10);
+    }
+
+    div[data-baseweb="input"] {
+        border-radius: 12px !important;
+    }
+
+    .stButton > button {
+        background-color: #7C6FF0;
+        color: white;
+        border-radius: 12px;
+        border: none;
+        padding: 0.55rem 1.2rem;
+        font-weight: 600;
+    }
+
+    .stButton > button:hover {
+        background-color: #6758d8;
+        color: white;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Initialize expense file
 if not os.path.exists(CSV_FILE):
     pd.DataFrame(columns=[
         "Date", "Category", "Amount", "Note"
     ]).to_csv(CSV_FILE, index=False)
 
-# Load expenses
 @st.cache_data
 def load_expenses():
     return pd.read_csv(CSV_FILE)
@@ -38,39 +122,166 @@ def save_expense(new_expense):
     df.to_csv(CSV_FILE, index=False)
     st.cache_data.clear()
 
-# Sidebar: monthly budget
-st.sidebar.title("💰 Student Expense Tracker")
-
-if "monthly_budget" not in st.session_state:
-    st.session_state.monthly_budget = 8000
+# Sidebar
+st.sidebar.markdown("## 💸 Expense Tracker")
+st.sidebar.write("Keep your monthly spending under control.")
 
 monthly_budget = st.sidebar.number_input(
     "Monthly budget (₹)",
     min_value=0,
-    value=st.session_state.monthly_budget,
+    value=8000,
     step=500
 )
 
-st.session_state.monthly_budget = monthly_budget
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🎯 Quick Tips")
+st.sidebar.markdown(
+    "- Add expenses immediately after spending\n"
+    "- Keep food and shopping limits realistic\n"
+    "- Check your daily limit regularly\n"
+    "- Save a small amount every month"
+)
 
-# Main title
-st.title("💰 Student Expense Tracker")
-st.write("Track your daily expenses and stay within your monthly budget.")
+# Header
+st.markdown('<p class="main-title">💸 Student Expense Tracker</p>', unsafe_allow_html=True)
+st.markdown(
+    '<p class="subtitle">Track daily expenses, monitor your monthly budget, and spend mindfully.</p>',
+    unsafe_allow_html=True
+)
 
-# Add expense form
-st.subheader("➕ Add Today's Expense")
+# Load expenses
+expenses = load_expenses()
+
+total_spent = expenses["Amount"].sum()
+remaining = monthly_budget - total_spent
+
+today = date.today()
+
+if today.month == 12:
+    next_month = date(today.year + 1, 1, 1)
+else:
+    next_month = date(today.year, today.month + 1, 1)
+
+days_left = (next_month - today).days
+
+if days_left > 0 and remaining > 0:
+    daily_limit = remaining / days_left
+else:
+    daily_limit = 0
+
+# Dashboard cards
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.markdown(
+        f'''
+        <div class="metric-card">
+            <div class="metric-label">Monthly Budget</div>
+            <div class="metric-value">₹{monthly_budget:,.0f}</div>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
+
+with col2:
+    st.markdown(
+        f'''
+        <div class="metric-card">
+            <div class="metric-label">Total Spent</div>
+            <div class="metric-value">₹{total_spent:,.0f}</div>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
+
+with col3:
+    st.markdown(
+        f'''
+        <div class="metric-card">
+            <div class="metric-label">Remaining</div>
+            <div class="metric-value">₹{remaining:,.0f}</div>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
+
+with col4:
+    st.markdown(
+        f'''
+        <div class="metric-card">
+            <div class="metric-label">Daily Limit</div>
+            <div class="metric-value">₹{daily_limit:,.0f}</div>
+        </div>
+        ''',
+        unsafe_allow_html=True
+    )
+
+# Progress bar
+if monthly_budget > 0:
+    used_percent = total_spent / monthly_budget
+    st.progress(min(used_percent, 1.0))
+    st.caption(f"You have used {used_percent * 100:.1f}% of your monthly budget.")
+
+# Alerts
+if remaining < 0:
+    st.error("⚠️ You have exceeded your monthly budget.")
+elif remaining < monthly_budget * 0.10:
+    st.warning("⚠️ You are close to your monthly budget limit. Reduce non-essential spending.")
+else:
+    st.success("✅ You are within your monthly budget.")
+
+# Expense history — moved above Add Expense
+st.markdown('<p class="section-title">🧾 Recent Expenses</p>', unsafe_allow_html=True)
+
+if not expenses.empty:
+    recent_expenses = expenses.sort_values("Date", ascending=False).head(8)
+
+    for index, row in recent_expenses.iterrows():
+        emoji = CATEGORY_EMOJI.get(row["Category"], "💸")
+
+        st.markdown(
+            f'''
+            <div class="history-card">
+                <b>{emoji} {row["Category"]}</b> &nbsp;•&nbsp; ₹{row["Amount"]:,.0f}
+                <br>
+                <span style="color:#6B6480; font-size:0.85rem;">
+                    {row["Date"]} {("• " + row["Note"]) if pd.notna(row["Note"]) and row["Note"] != "" else ""}
+                </span>
+            </div>
+            ''',
+            unsafe_allow_html=True
+        )
+
+    with st.expander("🔍 View full expense history"):
+        st.dataframe(
+            expenses.sort_values("Date", ascending=False),
+            use_container_width=True
+        )
+
+        selected_index = st.selectbox(
+            "Select expense number to delete",
+            expenses.index.tolist()
+        )
+
+        if st.button("Delete Selected Expense"):
+            expenses = expenses.drop(selected_index)
+            expenses.to_csv(CSV_FILE, index=False)
+            st.cache_data.clear()
+            st.success("Expense deleted successfully.")
+            st.rerun()
+
+else:
+    st.info("No expenses added yet. Add your first expense below! ✨")
+
+# Add expense
+st.markdown('<p class="section-title">➕ Add an Expense</p>', unsafe_allow_html=True)
 
 with st.form("expense_form", clear_on_submit=True):
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
 
     expense_date = col1.date_input("Date", value=date.today())
     category = col2.selectbox("Category", CATEGORIES)
-
-    amount = st.number_input(
-        "Amount spent (₹)",
-        min_value=0.0,
-        format="%.2f"
-    )
+    amount = col3.number_input("Amount spent (₹)", min_value=0.0, format="%.2f")
 
     note = st.text_input("Note (optional)")
 
@@ -86,57 +297,11 @@ with st.form("expense_form", clear_on_submit=True):
                 "Amount": amount,
                 "Note": note
             })
-            st.success("Expense added successfully!")
-
-# Load expenses
-expenses = load_expenses()
-
-# Calculate totals
-total_spent = expenses["Amount"].sum()
-remaining = monthly_budget - total_spent
-
-today = date.today()
-
-# Days left in current month
-if today.month == 12:
-    next_month = date(today.year + 1, 1, 1)
-else:
-    next_month = date(today.year, today.month + 1, 1)
-
-days_left = (next_month - today).days
-
-# Daily limit
-if days_left > 0 and remaining > 0:
-    daily_limit = remaining / days_left
-else:
-    daily_limit = 0
-
-# Dashboard metrics
-st.subheader("📊 Monthly Overview")
-
-col1, col2, col3, col4 = st.columns(4)
-
-col1.metric("Monthly Budget", f"₹{monthly_budget:,.0f}")
-col2.metric("Total Spent", f"₹{total_spent:,.0f}")
-col3.metric("Remaining", f"₹{remaining:,.0f}")
-col4.metric("Daily Limit", f"₹{daily_limit:,.0f}")
-
-# Budget progress
-if monthly_budget > 0:
-    used_percent = total_spent / monthly_budget
-    st.progress(min(used_percent, 1.0))
-    st.write(f"You have used **{used_percent * 100:.1f}%** of your monthly budget.")
-
-# Alerts
-if remaining < 0:
-    st.error("⚠️ You have exceeded your monthly budget.")
-elif remaining < monthly_budget * 0.10:
-    st.warning("⚠️ You are close to your monthly budget limit. Reduce non-essential spending.")
-else:
-    st.success("✅ You are within your monthly budget.")
+            st.success("Expense added successfully! 💜")
+            st.rerun()
 
 # Category chart
-st.subheader("📌 Spending by Category")
+st.markdown('<p class="section-title">📊 Where Your Money Goes</p>', unsafe_allow_html=True)
 
 if not expenses.empty:
     category_totals = (
@@ -150,37 +315,16 @@ if not expenses.empty:
         x="Category",
         y="Amount",
         color="Category",
-        title="Total Spending by Category"
+        title="Total Spending by Category",
+        color_discrete_sequence=px.colors.qualitative.Pastel
+    )
+
+    fig.update_layout(
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        font=dict(color="#4B3F72")
     )
 
     st.plotly_chart(fig, use_container_width=True)
 else:
-    st.info("No expenses added yet. Add your first expense above.")
-
-# Expense history
-st.subheader("🧾 Expense History")
-
-if not expenses.empty:
-    st.dataframe(
-        expenses.sort_values("Date", ascending=False),
-        use_container_width=True
-    )
-
-    # Delete expense
-    st.write("### Delete an Expense")
-
-    expense_options = expenses.index.tolist()
-
-    selected_index = st.selectbox(
-        "Select expense number to delete",
-        expense_options
-    )
-
-    if st.button("Delete Selected Expense"):
-        expenses = expenses.drop(selected_index)
-        expenses.to_csv(CSV_FILE, index=False)
-        st.cache_data.clear()
-        st.success("Expense deleted successfully.")
-        st.rerun()
-else:
-    st.info("Your expense history is empty.")
+    st.info("Add expenses to see your spending breakdown.")
