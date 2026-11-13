@@ -3,6 +3,8 @@ import pandas as pd
 import plotly.express as px
 from datetime import date
 import os
+from streamlit_local_storage import LocalStorage
+localS = LocalStorage()
 
 # ==========================================
 # PAGE CONFIGURATION
@@ -811,3 +813,18 @@ else:
     st.info(
         "Add expenses to see your spending breakdown."
     )
+# TEMPORARY BROWSER STORAGE TEST
+
+st.divider()
+st.subheader("Browser Storage Test")
+
+if st.button("Save Test Data"):
+    localS.setItem("expense_tracker_test", "My data is saved!")
+    st.success("Test data saved!")
+
+test_value = localS.getItem(
+    "expense_tracker_test",
+    key="expense_tracker_test_read"
+)
+
+st.write("Saved value:", test_value)
