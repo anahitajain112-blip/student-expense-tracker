@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -333,6 +332,39 @@ hr {
     border-color: #C7D2C3 !important;
 }
 
+/* LIGHTER TEXT FOR ALERTS, DATES AND CAPTIONS */
+
+/* Success message */
+[data-testid="stAlert"][data-testid="stSuccess"] p,
+[data-testid="stAlert"][data-testid="stSuccess"] span,
+div[data-testid="stAlert"] div[data-testid="stSuccess"] p,
+div[data-testid="stAlert"] div[data-testid="stSuccess"] span {
+    color: #5F7A66 !important;
+    -webkit-text-fill-color: #5F7A66 !important;
+}
+
+/* Info message */
+[data-testid="stAlert"][data-testid="stInfo"] p,
+[data-testid="stAlert"][data-testid="stInfo"] span,
+div[data-testid="stAlert"] div[data-testid="stInfo"] p,
+div[data-testid="stAlert"] div[data-testid="stInfo"] span {
+    color: #5F7A66 !important;
+    -webkit-text-fill-color: #5F7A66 !important;
+}
+
+/* Expense history date and note */
+.history-note {
+    color: #66796B !important;
+    -webkit-text-fill-color: #66796B !important;
+    font-size: 0.85rem;
+}
+
+/* Caption below progress bar */
+[data-testid="stCaptionContainer"],
+[data-testid="stCaptionContainer"] * {
+    color: #66796B !important;
+    -webkit-text-fill-color: #66796B !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
