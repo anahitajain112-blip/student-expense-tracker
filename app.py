@@ -31,85 +31,136 @@ CATEGORY_EMOJI = {
 }
 
 # Custom styling
+
+# Custom styling - Sage & Ivory Theme
 st.markdown("""
 <style>
-    .stApp {
-        background-color: #EFEAFB;
-        color: #241F33;
-    }
 
-    .main-title {
-        font-size: 2.4rem;
-        font-weight: 800;
-        color: #2B2350;
-        margin-bottom: 0.2rem;
-    }
+/* Main background */
+.stApp {
+    background-color: #F6F5EF;
+    color: #34483A;
+}
 
-    .subtitle {
-        font-size: 1.05rem;
-        color: #4A4460;
-        margin-bottom: 1.5rem;
-    }
+/* Main title */
+.main-title {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #34483A;
+    margin-bottom: 0.2rem;
+}
 
-    .metric-card {
-        background-color: #FFFFFF;
-        padding: 1.2rem;
-        border-radius: 18px;
-        box-shadow: 0 4px 14px rgba(76, 61, 140, 0.18);
-        text-align: center;
-    }
+/* Subtitle */
+.subtitle {
+    font-size: 1.05rem;
+    color: #788579;
+    margin-bottom: 1.5rem;
+}
 
-    .metric-label {
-        font-size: 0.9rem;
-        color: #554E6E;
-        margin-bottom: 0.3rem;
-    }
+/* Dashboard metric cards */
+.metric-card {
+    background-color: #FFFFFF;
+    padding: 1.3rem;
+    border-radius: 18px;
+    border: 1px solid #E5E9DF;
+    box-shadow: 0 4px 14px rgba(52, 72, 58, 0.06);
+    text-align: center;
+}
 
-    .metric-value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #2B2350;
-    }
+/* Metric labels */
+.metric-label {
+    font-size: 0.9rem;
+    color: #89958A;
+    margin-bottom: 0.4rem;
+}
 
-    .section-title {
-        font-size: 1.35rem;
-        font-weight: 700;
-        color: #2B2350;
-        margin-top: 1.5rem;
-        margin-bottom: 0.7rem;
-    }
+/* Metric values */
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #52745B;
+}
 
-    .history-card {
-        background-color: #FFFFFF;
-        padding: 1rem;
-        border-radius: 16px;
-        box-shadow: 0 3px 10px rgba(76, 61, 140, 0.14);
-        color: #241F33;
-        margin-bottom: 0.7rem;
-    }
+/* Section headings */
+.section-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #34483A;
+    margin-top: 1.5rem;
+    margin-bottom: 0.7rem;
+}
 
-    .history-note {
-        color: #554E6E;
-        font-size: 0.85rem;
-    }
+/* Expense history cards */
+.history-card {
+    background-color: #FFFFFF;
+    padding: 1.1rem;
+    border-radius: 16px;
+    border: 1px solid #E8EAE2;
+    box-shadow: 0 3px 10px rgba(52, 72, 58, 0.05);
+    color: #34483A;
+    margin-bottom: 0.7rem;
+}
 
-    div[data-baseweb="input"] {
-        border-radius: 12px !important;
-    }
+/* Expense date and note */
+.history-note {
+    color: #929A8E;
+    font-size: 0.85rem;
+}
 
-    .stButton > button {
-        background-color: #5B4BC4;
-        color: white;
-        border-radius: 12px;
-        border: none;
-        padding: 0.55rem 1.2rem;
-        font-weight: 600;
-    }
+/* Input fields */
+div[data-baseweb="input"],
+div[data-baseweb="select"] {
+    border-radius: 10px !important;
+}
 
-    .stButton > button:hover {
-        background-color: #4A3BA8;
-        color: white;
-    }
+/* Buttons */
+.stButton > button,
+.stFormSubmitButton > button {
+    background-color: #52745B;
+    color: white;
+    border-radius: 12px;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+/* Button hover */
+.stButton > button:hover,
+.stFormSubmitButton > button:hover {
+    background-color: #3F6048;
+    color: white;
+    border: none;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #E9EEE5;
+}
+
+/* Sidebar text */
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] label {
+    color: #435847;
+}
+
+/* Progress bar */
+.stProgress > div > div > div > div {
+    background-color: #719477;
+}
+
+/* Expanders */
+.streamlit-expanderHeader {
+    color: #52745B;
+    font-weight: 600;
+}
+
+/* Dataframe */
+[data-testid="stDataFrame"] {
+    border: 1px solid #E5E9DF;
+    border-radius: 12px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -323,13 +374,36 @@ if not expenses.empty:
         y="Amount",
         color="Category",
         title="Total Spending by Category",
-        color_discrete_sequence=px.colors.qualitative.Pastel
+        color_discrete_sequence=[
+    "#719477",
+    "#D9A18F",
+    "#A8B99F",
+    "#E6CBA8",
+    "#91A9A0",
+    "#B5A6C9"
+]
     )
 
     fig.update_layout(
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#4B3F72")
+    plot_bgcolor="#FFFFFF",
+    paper_bgcolor="#FFFFFF",
+    font=dict(
+        color="#34483A",
+        family="Arial"
+    ),
+    title_font=dict(
+        size=20,
+        color="#34483A"
+    ),
+    legend_title_text="Category",
+    margin=dict(l=20, r=20, t=60, b=20),
+    bargap=0.35
+)
+
+fig.update_traces(
+    marker_line_width=0,
+    opacity=0.9
+)
     )
 
     st.plotly_chart(fig, use_container_width=True)
