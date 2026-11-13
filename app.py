@@ -34,20 +34,20 @@ CATEGORY_EMOJI = {
 st.markdown("""
 <style>
     .stApp {
-        background-color: #F7F5FF;
-        color: #2E2A3B;
+        background-color: #EFEAFB;
+        color: #241F33;
     }
 
     .main-title {
         font-size: 2.4rem;
         font-weight: 800;
-        color: #4B3F72;
+        color: #2B2350;
         margin-bottom: 0.2rem;
     }
 
     .subtitle {
         font-size: 1.05rem;
-        color: #6B6480;
+        color: #4A4460;
         margin-bottom: 1.5rem;
     }
 
@@ -55,26 +55,26 @@ st.markdown("""
         background-color: #FFFFFF;
         padding: 1.2rem;
         border-radius: 18px;
-        box-shadow: 0 4px 14px rgba(124, 111, 240, 0.12);
+        box-shadow: 0 4px 14px rgba(76, 61, 140, 0.18);
         text-align: center;
     }
 
     .metric-label {
         font-size: 0.9rem;
-        color: #6B6480;
+        color: #554E6E;
         margin-bottom: 0.3rem;
     }
 
     .metric-value {
         font-size: 1.5rem;
         font-weight: 700;
-        color: #4B3F72;
+        color: #2B2350;
     }
 
     .section-title {
         font-size: 1.35rem;
         font-weight: 700;
-        color: #4B3F72;
+        color: #2B2350;
         margin-top: 1.5rem;
         margin-bottom: 0.7rem;
     }
@@ -83,7 +83,14 @@ st.markdown("""
         background-color: #FFFFFF;
         padding: 1rem;
         border-radius: 16px;
-        box-shadow: 0 3px 10px rgba(124, 111, 240, 0.10);
+        box-shadow: 0 3px 10px rgba(76, 61, 140, 0.14);
+        color: #241F33;
+        margin-bottom: 0.7rem;
+    }
+
+    .history-note {
+        color: #554E6E;
+        font-size: 0.85rem;
     }
 
     div[data-baseweb="input"] {
@@ -91,7 +98,7 @@ st.markdown("""
     }
 
     .stButton > button {
-        background-color: #7C6FF0;
+        background-color: #5B4BC4;
         color: white;
         border-radius: 12px;
         border: none;
@@ -100,7 +107,7 @@ st.markdown("""
     }
 
     .stButton > button:hover {
-        background-color: #6758d8;
+        background-color: #4A3BA8;
         color: white;
     }
 </style>
@@ -240,16 +247,16 @@ if not expenses.empty:
         emoji = CATEGORY_EMOJI.get(row["Category"], "💸")
 
         st.markdown(
-            f'''
-            <div class="history-card">
-                <b>{emoji} {row["Category"]}</b> &nbsp;•&nbsp; ₹{row["Amount"]:,.0f}
-                <br>
-                <span style="color:#6B6480; font-size:0.85rem;">
-                    {row["Date"]} {("• " + row["Note"]) if pd.notna(row["Note"]) and row["Note"] != "" else ""}
-                </span>
-            </div>
-            ''',
-            unsafe_allow_html=True
+    f'''
+    <div class="history-card">
+        <b>{emoji} {row["Category"]}</b> &nbsp;•&nbsp; ₹{row["Amount"]:,.0f}
+        <br>
+        <span class="history-note">
+            {row["Date"]} {("• " + row["Note"]) if pd.notna(row["Note"]) and row["Note"] != "" else ""}
+        </span>
+    </div>
+    ''',
+    unsafe_allow_html=True
         )
 
     with st.expander("🔍 View full expense history"):
