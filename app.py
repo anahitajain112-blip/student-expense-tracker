@@ -102,7 +102,7 @@ section[data-testid="stSidebar"] li,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] span,
 section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {
-    color: #263D30 !important;
+    color: #3D5245 !important;
 }
 
 section[data-testid="stSidebar"] hr {
@@ -118,8 +118,8 @@ section[data-testid="stSidebar"] hr {
 .stSelectbox label,
 .stDateInput label,
 .stTextArea label {
-    color: #263D30 !important;
-    -webkit-text-fill-color: #263D30 !important;
+    color: #3D5245 !important;
+    -webkit-text-fill-color: #3D5245 !important;
     font-weight: 700 !important;
 }
 
@@ -211,6 +211,14 @@ div[data-baseweb="calendar"] button * {
     padding: 22px;
     border-radius: 18px;
     border: 1px solid #C7D2C3;
+}
+
+[data-testid="stForm"] p,
+[data-testid="stForm"] label,
+[data-testid="stForm"] span,
+[data-testid="stForm"] [data-testid="stWidgetLabel"] {
+    color: #3D5245 !important;
+    -webkit-text-fill-color: #3D5245 !important;
 }
 
 /* DASHBOARD CARDS */
