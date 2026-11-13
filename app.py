@@ -448,7 +448,6 @@ fig.update_layout(
     margin=dict(l=20, r=20, t=65, b=20),
     bargap=0.35
 )
-
     fig.update_traces(
         marker_line_width=0,
         opacity=0.9
