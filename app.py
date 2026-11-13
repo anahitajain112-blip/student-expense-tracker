@@ -3,8 +3,6 @@ import pandas as pd
 import plotly.express as px
 from datetime import date
 import os
-from streamlit_local_storage import LocalStorage
-localS = LocalStorage()
 
 # ==========================================
 # PAGE CONFIGURATION
@@ -16,7 +14,8 @@ st.set_page_config(
     layout="wide"
 )
 
-CSV_FILE = "expenses.csv"
+DATA_FOLDER = "user_data"
+os.makedirs(DATA_FOLDER, exist_ok=True)
 
 CATEGORIES = [
     "Food",
@@ -379,62 +378,137 @@ div[data-testid="stAlert"] div[data-testid="stInfo"] span {
 
 
 # ==========================================
-# INITIALIZE EXPENSE FILE
+# USER-SPECIFIC DATA FUNCTIONS
 # ==========================================
 
-if not os.path.exists(CSV_FILE):
-    pd.DataFrame(columns=[
-        "Date", "Category", "Amount", "Note"
-    ]).to_csv(CSV_FILE, index=False)
+def get_safe_username(username):
+    return "".join(
+        char for char in username.strip().lower()
+        if char.isalnum() or char == "_"
+    )
+
+
+def get_user_expense_file(username):
+    safe_username = get_safe_username(username)
+
+    if safe_username == "":
+        return None
+
+    return os.path.join(
+        DATA_FOLDER,
+        f"{safe_username}_expenses.csv"
+    )
+
+
+def get_user_budget_file(username):
+    safe_username = get_safe_username(username)
+
+    if safe_username == "":
+        return None
+
+    return os.path.join(
+        DATA_FOLDER,
+        f"{safe_username}_budget.txt"
+    )
+
+
+def initialise_user_files(username):
+    expense_file = get_user_expense_file(username)
+    budget_file = get_user_budget_file(username)
+
+    if expense_file and not os.path.exists(expense_file):
+        pd.DataFrame(columns=[
+            "Date", "Category", "Amount", "Note"
+        ]).to_csv(expense_file, index=False)
+
+    if budget_file and not os.path.exists(budget_file):
+        with open(budget_file, "w") as file:
+            file.write("8000")
 
 
 @st.cache_data
-def load_expenses():
-    return pd.read_csv(CSV_FILE)
+def load_expenses(expense_file):
+    return pd.read_csv(expense_file)
 
 
-def save_expense(new_expense):
-    df = load_expenses()
+def save_expense(expense_file, new_expense):
+    df = load_expenses(expense_file)
 
     df = pd.concat(
         [df, pd.DataFrame([new_expense])],
         ignore_index=True
     )
 
-    df.to_csv(CSV_FILE, index=False)
+    df.to_csv(expense_file, index=False)
     st.cache_data.clear()
 
 
+def delete_expense(expense_file, index):
+    df = load_expenses(expense_file)
+    df = df.drop(index)
+    df.to_csv(expense_file, index=False)
+    st.cache_data.clear()
+
+
+def load_user_budget(budget_file):
+    if os.path.exists(budget_file):
+        with open(budget_file, "r") as file:
+            saved_budget = file.read().strip()
+
+        if saved_budget.isdigit():
+            return int(saved_budget)
+
+    return 8000
+
+
+def save_user_budget(budget_file, budget):
+    with open(budget_file, "w") as file:
+        file.write(str(int(budget)))
+
+
 # ==========================================
-# SIDEBAR
+# SIDEBAR - USER LOGIN AND BUDGET
 # ==========================================
+
+st.sidebar.markdown("## 👤 User")
+
+username = st.sidebar.text_input(
+    "Enter your username",
+    placeholder="e.g. riya"
+)
+
+if username.strip() == "":
+    st.sidebar.warning(
+        "Please enter a username to start tracking your expenses."
+    )
+    st.stop()
+
+user_expense_file = get_user_expense_file(username)
+user_budget_file = get_user_budget_file(username)
+
+if user_expense_file is None or user_budget_file is None:
+    st.sidebar.error("Please enter a valid username.")
+    st.stop()
+
+initialise_user_files(username)
 
 st.sidebar.markdown("## 💸 Expense Tracker")
-
 st.sidebar.write(
     "Keep your monthly spending under control."
 )
 
+monthly_budget = load_user_budget(user_budget_file)
+
 monthly_budget = st.sidebar.number_input(
     "Monthly budget (₹)",
     min_value=0,
-    value=8000,
+    value=monthly_budget,
     step=500
 )
 
-st.sidebar.markdown("---")
-
-st.sidebar.markdown("### 🎯 Quick Tips")
-
-st.sidebar.markdown(
-    """
-    - Add expenses immediately after spending
-    - Keep food and shopping limits realistic
-    - Check your daily limit regularly
-    - Save a small amount every month
-    """
-)
-
+if st.sidebar.button("Save Monthly Budget"):
+    save_user_budget(user_budget_file, monthly_budget)
+    st.sidebar.success("Monthly budget saved!")
 
 # ==========================================
 # HEADER
@@ -455,7 +529,7 @@ st.markdown(
 # LOAD EXPENSES
 # ==========================================
 
-expenses = load_expenses()
+expenses = load_expenses(user_expense_file)
 
 total_spent = expenses["Amount"].sum()
 
@@ -623,19 +697,11 @@ if not expenses.empty:
 
         if st.button("Delete Selected Expense"):
 
-            expenses = expenses.drop(selected_index)
+    delete_expense(user_expense_file, selected_index)
 
-            expenses.to_csv(
-                CSV_FILE,
-                index=False
-            )
+    st.success("Expense deleted successfully.")
 
-            st.cache_data.clear()
-
-            st.success("Expense deleted successfully.")
-
-            st.rerun()
-
+    st.rerun()
 else:
 
     st.info(
@@ -690,12 +756,15 @@ with st.form("expense_form", clear_on_submit=True):
 
         else:
 
-            save_expense({
-                "Date": expense_date.strftime("%Y-%m-%d"),
-                "Category": category,
-                "Amount": amount,
-                "Note": note
-            })
+            save_expense(
+                user_expense_file,
+                {
+                    "Date": expense_date.strftime("%Y-%m-%d"),
+                    "Category": category,
+                    "Amount": amount,
+                    "Note": note
+                }
+            )
 
             st.success(
                 "Expense added successfully! 🌿"
@@ -813,16 +882,3 @@ else:
     st.info(
         "Add expenses to see your spending breakdown."
     )
-
-# TEMPORARY BROWSER STORAGE TEST
-
-st.divider()
-st.subheader("Browser Storage Test")
-
-if st.button("Save Test Data"):
-    localS.setItem("expense_tracker_test", "My data is saved!")
-    st.success("Test data saved! Refresh the page.")
-
-if st.button("Read Test Data"):
-    test_value = localS.getItem("expense_tracker_test")
-    st.write("Saved value:", test_value)
