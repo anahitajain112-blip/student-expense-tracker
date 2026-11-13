@@ -182,6 +182,72 @@ div[data-baseweb="select"] {
     color: #526454 !important;
 }
 
+
+/* SIDEBAR BUDGET INPUT */
+section[data-testid="stSidebar"] input {
+    color: #263D30 !important;
+    background-color: #FFFFFF !important;
+    -webkit-text-fill-color: #263D30 !important;
+    font-weight: 600 !important;
+}
+
+/* ALL INPUT LABELS */
+.stTextInput label,
+.stNumberInput label,
+.stSelectbox label,
+.stDateInput label,
+.stTextArea label,
+.stMultiSelect label {
+    color: #263D30 !important;
+    font-weight: 650 !important;
+}
+
+/* INPUT FIELD TEXT */
+.stTextInput input,
+.stNumberInput input,
+.stDateInput input {
+    color: #263D30 !important;
+    background-color: #FFFFFF !important;
+    -webkit-text-fill-color: #263D30 !important;
+    font-weight: 600 !important;
+}
+
+/* DROPDOWN SELECTED TEXT */
+.stSelectbox div[data-baseweb="select"] > div {
+    background-color: #FFFFFF !important;
+    color: #263D30 !important;
+}
+
+.stSelectbox div[data-baseweb="select"] span {
+    color: #263D30 !important;
+}
+
+/* DATE PICKER TEXT */
+.stDateInput input {
+    color: #263D30 !important;
+    background-color: #FFFFFF !important;
+}
+
+/* OPTIONAL NOTE PLACEHOLDER */
+.stTextInput input::placeholder {
+    color: #89958A !important;
+    -webkit-text-fill-color: #89958A !important;
+}
+
+/* NUMBER INPUT BUTTONS */
+.stNumberInput button {
+    background-color: #DCE5D8 !important;
+    color: #263D30 !important;
+}
+
+/* FORM BACKGROUND */
+[data-testid="stForm"] {
+    background-color: #E7EADF;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #D1DCCF;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
