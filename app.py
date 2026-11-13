@@ -379,6 +379,7 @@ with st.form("expense_form", clear_on_submit=True):
             st.success("Expense added successfully! 💜")
             st.rerun()
 
+
 # Category chart
 st.markdown(
     '<p class="section-title">📊 Where Your Money Goes</p>',
@@ -386,6 +387,7 @@ st.markdown(
 )
 
 if not expenses.empty:
+
     category_totals = (
         expenses.groupby("Category")["Amount"]
         .sum()
@@ -399,7 +401,7 @@ if not expenses.empty:
         color="Category",
         title="Total Spending by Category",
         color_discrete_sequence=[
-            "#719477",
+            "#527C5C",
             "#D9A18F",
             "#A8B99F",
             "#E6CBA8",
@@ -408,46 +410,42 @@ if not expenses.empty:
         ]
     )
 
-    
-fig.update_layout(
-    plot_bgcolor="#FFFFFF",
-    paper_bgcolor="#FFFFFF",
+    fig.update_layout(
+        plot_bgcolor="#FFFFFF",
+        paper_bgcolor="#FFFFFF",
 
-    font=dict(
-        color="#263D30",
-        family="Arial",
-        size=13
-    ),
+        font=dict(
+            color="#263D30",
+            family="Arial",
+            size=13
+        ),
 
-    title=dict(
-        text="Total Spending by Category",
-        font=dict(size=20, color="#263D30")
-    ),
+        title=dict(
+            font=dict(size=20, color="#263D30")
+        ),
 
-    xaxis=dict(
-        title="Expense Category",
-        title_font=dict(color="#263D30", size=14),
-        tickfont=dict(color="#344F3B", size=12),
-        showgrid=False,
-        zeroline=False
-    ),
+        xaxis=dict(
+            title="Expense Category",
+            title_font=dict(color="#263D30", size=14),
+            tickfont=dict(color="#344F3B", size=12),
+            showgrid=False
+        ),
 
-    yaxis=dict(
-        title="Amount (₹)",
-        title_font=dict(color="#263D30", size=14),
-        tickfont=dict(color="#344F3B", size=12),
-        gridcolor="#E5E9DF",
-        zeroline=False
-    ),
+        yaxis=dict(
+            title="Amount (₹)",
+            title_font=dict(color="#263D30", size=14),
+            tickfont=dict(color="#344F3B", size=12),
+            gridcolor="#E5E9DF"
+        ),
 
-    legend=dict(
-        font=dict(color="#263D30"),
-        title_font=dict(color="#263D30")
-    ),
+        legend=dict(
+            font=dict(color="#263D30")
+        ),
 
-    margin=dict(l=20, r=20, t=65, b=20),
-    bargap=0.35
-)
+        margin=dict(l=20, r=20, t=65, b=20),
+        bargap=0.35
+    )
+
     fig.update_traces(
         marker_line_width=0,
         opacity=0.9
