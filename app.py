@@ -365,6 +365,13 @@ div[data-testid="stAlert"] div[data-testid="stInfo"] span {
     color: #66796B !important;
     -webkit-text-fill-color: #66796B !important;
 }
+/* Force lighter alert text */
+[data-testid="stAlert"] p,
+[data-testid="stAlert"] span,
+[data-testid="stAlert"] div {
+    color: #5F7A66 !important;
+    -webkit-text-fill-color: #5F7A66 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
