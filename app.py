@@ -86,7 +86,7 @@ st.markdown("""
 .stApp span,
 .stApp label,
 .stApp [data-testid="stMarkdownContainer"] {
-    color: #34483B;
+    color: #3D5245;
 }
 
 /* SIDEBAR */
