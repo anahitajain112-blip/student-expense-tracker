@@ -359,7 +359,10 @@ with st.form("expense_form", clear_on_submit=True):
             st.rerun()
 
 # Category chart
-st.markdown('<p class="section-title">📊 Where Your Money Goes</p>', unsafe_allow_html=True)
+st.markdown(
+    '<p class="section-title">📊 Where Your Money Goes</p>',
+    unsafe_allow_html=True
+)
 
 if not expenses.empty:
     category_totals = (
@@ -375,37 +378,37 @@ if not expenses.empty:
         color="Category",
         title="Total Spending by Category",
         color_discrete_sequence=[
-    "#719477",
-    "#D9A18F",
-    "#A8B99F",
-    "#E6CBA8",
-    "#91A9A0",
-    "#B5A6C9"
-]
+            "#719477",
+            "#D9A18F",
+            "#A8B99F",
+            "#E6CBA8",
+            "#91A9A0",
+            "#B5A6C9"
+        ]
     )
 
     fig.update_layout(
-    plot_bgcolor="#FFFFFF",
-    paper_bgcolor="#FFFFFF",
-    font=dict(
-        color="#34483A",
-        family="Arial"
-    ),
-    title_font=dict(
-        size=20,
-        color="#34483A"
-    ),
-    legend_title_text="Category",
-    margin=dict(l=20, r=20, t=60, b=20),
-    bargap=0.35
-)
+        plot_bgcolor="#FFFFFF",
+        paper_bgcolor="#FFFFFF",
+        font=dict(
+            color="#34483A",
+            family="Arial"
+        ),
+        title_font=dict(
+            size=20,
+            color="#34483A"
+        ),
+        legend_title_text="Category",
+        margin=dict(l=20, r=20, t=60, b=20),
+        bargap=0.35
+    )
 
-fig.update_traces(
-    marker_line_width=0,
-    opacity=0.9
-)
+    fig.update_traces(
+        marker_line_width=0,
+        opacity=0.9
     )
 
     st.plotly_chart(fig, use_container_width=True)
+
 else:
     st.info("Add expenses to see your spending breakdown.")
