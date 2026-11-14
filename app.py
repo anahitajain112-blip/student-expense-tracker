@@ -467,27 +467,29 @@ def save_user_budget(budget_file, budget):
 
 
 # ==========================================
-# SIDEBAR - USER LOGIN AND BUDGET
+# USER LOGIN - MAIN PAGE
 # ==========================================
 
-st.sidebar.markdown("## 👤 User")
+st.markdown('<p class="main-title">💸 Student Expense Tracker</p>', unsafe_allow_html=True)
+st.markdown(
+    '<p class="subtitle">Track daily expenses, monitor your monthly budget, and spend mindfully.</p>',
+    unsafe_allow_html=True
+)
 
-username = st.sidebar.text_input(
-    "Enter your username",
+username = st.text_input(
+    "Enter your username to start",
     placeholder="e.g. riya"
 )
 
 if username.strip() == "":
-    st.sidebar.warning(
-        "Please enter a username to start tracking your expenses."
-    )
+    st.info("👋 Welcome! Enter your username above to start tracking your expenses.")
     st.stop()
 
 user_expense_file = get_user_expense_file(username)
 user_budget_file = get_user_budget_file(username)
 
 if user_expense_file is None or user_budget_file is None:
-    st.sidebar.error("Please enter a valid username.")
+    st.error("Please enter a valid username.")
     st.stop()
 
 initialise_user_files(username)
@@ -509,20 +511,6 @@ monthly_budget = st.sidebar.number_input(
 if st.sidebar.button("Save Monthly Budget"):
     save_user_budget(user_budget_file, monthly_budget)
     st.sidebar.success("Monthly budget saved!")
-
-# ==========================================
-# HEADER
-# ==========================================
-
-st.markdown(
-    '<p class="main-title">💸 Student Expense Tracker</p>',
-    unsafe_allow_html=True
-)
-
-st.markdown(
-    '<p class="subtitle">Track daily expenses, monitor your monthly budget, and spend mindfully.</p>',
-    unsafe_allow_html=True
-)
 
 
 # ==========================================
